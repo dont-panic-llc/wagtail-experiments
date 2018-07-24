@@ -1,9 +1,18 @@
 from __future__ import absolute_import, unicode_literals
 
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
+
+try:
+    from django.urls import reverse
+except ImportError:  # fallback for Django <=1.9
+    from django.core.urlresolvers import reverse
+
 from django.test import TestCase
-from wagtail.wagtailcore.models import Page
+
+try:
+    from wagtail.core.models import Page
+except ImportError:  # fallback for Wagtail <2.0
+    from wagtail.wagtailcore.models import Page
 
 from experiments.models import Experiment, ExperimentHistory
 

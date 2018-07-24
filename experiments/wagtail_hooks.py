@@ -2,13 +2,22 @@ from __future__ import absolute_import, unicode_literals
 
 from django.conf.urls import include, url
 from django.contrib.admin.utils import quote
-from django.core.urlresolvers import reverse
+
+try:
+    from django.urls import reverse
+except ImportError:  # fallback for Django <=1.9
+    from django.core.urlresolvers import reverse
+
 from django.utils.translation import ugettext_lazy as _
 from experiments import admin_urls
 from wagtail.contrib.modeladmin.helpers import ButtonHelper
 from wagtail.contrib.modeladmin.options import ModelAdmin, modeladmin_register
 from wagtail.contrib.modeladmin.views import CreateView, EditView
-from wagtail.wagtailcore import hooks
+
+try:
+    from wagtail.core import hooks
+except ImportError:  # fallback for Wagtail <2.0
+    from wagtail.wagtailcore import hooks
 
 from .models import Experiment
 from .utils import get_user_id, impersonate_other_page
@@ -17,7 +26,7 @@ from .utils import get_user_id, impersonate_other_page
 @hooks.register('register_admin_urls')
 def register_admin_urls():
     return [
-        url(r'^experiments/', include(admin_urls, app_name='experiments', namespace='experiments')),
+        url(r'^experiments/', include(admin_urls, namespace='experiments')),
     ]
 
 
